@@ -1,4 +1,4 @@
-import 'package:dms/modules/dashboard/presentation/view/desktop_view.dart';
+import 'package:dms/modules/dashboard/presentation/views/dummy_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
