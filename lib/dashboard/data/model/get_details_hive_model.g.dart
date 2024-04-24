@@ -59,10 +59,10 @@ class DataHiveAdapter extends TypeAdapter<DataHive> {
     return DataHive(
       fields[0] as String,
       fields[1] as String,
-      fields[2] as int,
+      fields[2] as num,
       fields[3] as double,
       fields[4] as String,
-      fields[5] as int,
+      fields[5] as num,
       fields[6] as String,
       fields[7] as String,
       fields[8] as String,

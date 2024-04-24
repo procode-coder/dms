@@ -13,6 +13,11 @@ class GetDataSuccessState extends DashboardState {
   GetDataSuccessState(this.uiData);
 }
 
+class GetDataNoNetState extends DashboardState {
+  List<GetDetailsAttributeModel> uiData;
+  GetDataNoNetState(this.uiData);
+}
+
 class Datagotstate extends DashboardState {
   final Box<GetDetailsModel> getDetailsModel;
 
