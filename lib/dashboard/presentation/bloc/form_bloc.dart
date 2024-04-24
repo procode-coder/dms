@@ -31,6 +31,33 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       List<GetDetailsResponseModel> listOfModel =
           getDetailsResponseModelFromJson(jsonEncode(response.right));
       final dataBox = await Hive.openBox<GetDetailsModel>('datas');
+      // dataBox.add(dataMode);
+      // mapping data for local db
+      List<GetDetailsResponseModel> res = dataBox.values.map((e) {
+        return GetDetailsResponseModel(
+            name: e.name,
+            id: e.id,
+            data: Data(
+                dataColor: e.data.dataColor,
+                dataCapacity: e.data.dataCapacity,
+                capacityGb: e.data.capacityGb,
+                dataPrice: e.data.dataPrice,
+                dataGeneration: e.data.dataGeneration,
+                year: e.data.year,
+                cpuModel: e.data.cpuModel,
+                hardDiskSize: e.data.hardDiskSize,
+                strapColour: e.data.strapColour,
+                caseSize: e.data.caseSize,
+                color: e.data.color,
+                description: e.data.description,
+                capacity: e.data.capacity,
+                screenSize: e.data.screenSize,
+                generation: e.data.generation,
+                price: e.data.price));
+      }).toList();
+      for (var element in res) {
+        print("response data ${element.data?.toJson().toString()}");
+      }
       // for passing to ui
       List<GetDetailsAttributeModel> uiData = listOfModel.map((e) {
         return GetDetailsAttributeModel(

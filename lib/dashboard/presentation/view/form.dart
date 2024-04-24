@@ -3,6 +3,7 @@ import 'package:dms/dashboard/presentation/bloc/form_bloc.dart';
 import 'package:dms/dashboard/presentation/bloc/form_event.dart';
 import 'package:dms/dashboard/presentation/bloc/form_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
@@ -20,21 +21,49 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BlocBuilder<DashboardBloc, DashboardState>(
-                  builder: (context, state) {
-                    return ElevatedButton(
-                        onPressed: () {
-                          BlocProvider.of<DashboardBloc>(context, listen: false)
-                              .add(DashboardInitEvent());
-                        },
-                        child: const Text("data"));
-                  },
+                BlocProvider(
+                  create: (context) =>
+                      DashboardBloc()..add(DashboardInitEvent()),
+                  child: BlocBuilder<DashboardBloc, DashboardState>(
+                      builder: (context, state) {
+                    if (state is GetDataSuccessState) {
+                      print(state.uiData.length);
+                      return SingleChildScrollView(
+                          child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                        height: 600,
+                                        child: ListView.builder(
+                                          itemCount: state.uiData.length,
+                                          itemBuilder: (context, index) {
+                                            var name = state.uiData[index].name;
+                                            var id = state.uiData[index].id;
+                                            var data = state.uiData[index].data;
+                                            print(data?.color ?? "hey");
+                                            return ListTile(
+                                                title: RichText(
+                                              text: TextSpan(children: [
+                                                TextSpan(text: "ID : $id \n"),
+                                                TextSpan(
+                                                    text: "Name : $name \n"),
+                                                TextSpan(
+                                                    text:
+                                                        "Data : {\n Color :  ${data?.color}\n Price :   ${data?.price ?? "-"} \n CPU MOdel :   ${data?.cpuModel ?? "-"}  \n Generation :   ${data?.generation ?? "-"}  \n Capacity :   ${data?.capacity ?? "-"} \n CapacityGB :   ${data?.capacityGb ?? 0} \n Screen Size : ${data?.screenSize ?? 0} \n }"),
+                                              ]),
+                                            ));
+                                          },
+                                        )),
+                                  ])));
+                    }
+                    return const Scaffold(
+                      body: Text("data"),
+                    );
+                  }),
                 ),
-                // BlocBuilder<DashboardBloc, DashboardState>(
-                //   builder: (context, state) {
-                //     if (state is GetDataSuccessState) {}
-                //   },
-                // )
               ],
             ),
           )),
