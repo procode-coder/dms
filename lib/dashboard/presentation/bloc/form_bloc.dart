@@ -191,7 +191,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       //         generation: responseModel.data?.generation ?? "",
       //         price: responseModel.data?.price ?? ""));
 
-      emit(GetDataSuccessState(getDetailsAttributeModel));
+      emit(GetDataSuccessState(uiData));
     }
   }
 }

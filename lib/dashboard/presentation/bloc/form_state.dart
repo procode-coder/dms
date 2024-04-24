@@ -9,8 +9,8 @@ class DashboardInitial extends DashboardState {}
 class GetDataFailState extends DashboardState {}
 
 class GetDataSuccessState extends DashboardState {
-  GetDetailsAttributeModel? getDetailsAttributeModel;
-  GetDataSuccessState(this.getDetailsAttributeModel);
+  List<GetDetailsAttributeModel> uiData;
+  GetDataSuccessState(this.uiData);
 }
 
 class Datagotstate extends DashboardState {
