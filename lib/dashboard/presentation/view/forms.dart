@@ -34,6 +34,12 @@ class FormScreen extends StatelessWidget {
                           .add(DashBoardBackEvent());
                     },
                     child: const Text("Back")),
+                ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<DashboardBloc>(context)
+                          .add(DashBoardHiveEvent());
+                    },
+                    child: const Text("Hive")),
               ],
             ),
             const SizedBox(

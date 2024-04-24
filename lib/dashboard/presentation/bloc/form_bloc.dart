@@ -17,6 +17,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
     on<DashboardInitEvent>(dashboardInitEvent);
     on<DashBoardBackEvent>(dashBoardBackEvent);
+    on<DashBoardHiveEvent>(dashBoardHiveEvent);
   }
 
   FutureOr<void> dashboardInitEvent(
@@ -108,41 +109,72 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         dataBox.add(dataModel);
       }
 
-      if (connectivityResult.contains(ConnectivityResult.none)) {
-        print("off net");
-        List<GetDetailsAttributeModel> reponse = dataBox.values.map((e) {
-          return GetDetailsAttributeModel(
-              name: e.name,
-              id: e.id,
-              data: DataAttribute(
-                  dataColor: e.data.dataColor,
-                  dataCapacity: e.data.dataCapacity,
-                  capacityGb: e.data.capacityGb,
-                  dataPrice: e.data.dataPrice,
-                  dataGeneration: e.data.dataGeneration,
-                  year: e.data.year,
-                  cpuModel: e.data.cpuModel,
-                  hardDiskSize: e.data.hardDiskSize,
-                  strapColour: e.data.strapColour,
-                  caseSize: e.data.caseSize,
-                  color: e.data.color,
-                  description: e.data.description,
-                  capacity: e.data.capacity,
-                  screenSize: e.data.screenSize,
-                  generation: e.data.generation,
-                  price: e.data.price));
-        }).toList();
-        print(reponse);
-        emit(GetDataSuccessState(uiData));
-      } else {
-        print("net on");
-        emit(GetDataSuccessState(uiData));
-      }
+      // if (connectivityResult.contains(ConnectivityResult.none)) {
+      //   print("off net");
+      //   List<GetDetailsAttributeModel> reponse = dataBox.values.map((e) {
+      //     return GetDetailsAttributeModel(
+      //         name: e.name,
+      //         id: e.id,
+      //         data: DataAttribute(
+      //             dataColor: e.data.dataColor,
+      //             dataCapacity: e.data.dataCapacity,
+      //             capacityGb: e.data.capacityGb,
+      //             dataPrice: e.data.dataPrice,
+      //             dataGeneration: e.data.dataGeneration,
+      //             year: e.data.year,
+      //             cpuModel: e.data.cpuModel,
+      //             hardDiskSize: e.data.hardDiskSize,
+      //             strapColour: e.data.strapColour,
+      //             caseSize: e.data.caseSize,
+      //             color: e.data.color,
+      //             description: e.data.description,
+      //             capacity: e.data.capacity,
+      //             screenSize: e.data.screenSize,
+      //             generation: e.data.generation,
+      //             price: e.data.price));
+      //   }).toList();
+      //   print(reponse);
+      //   emit(GetDataSuccessState(reponse));
+      // } else {
+      //   print("net on");
+      //   emit(GetDataSuccessState(uiData));
+      // }
+      emit(GetDataSuccessState(uiData));
     }
   }
 
   FutureOr<void> dashBoardBackEvent(
       DashBoardBackEvent event, Emitter<DashboardState> emit) {
     emit(DashBoardBackstate());
+  }
+
+  FutureOr<void> dashBoardHiveEvent(
+      DashBoardHiveEvent event, Emitter<DashboardState> emit) async {
+    final dataBox = await Hive.openBox<GetDetailsModel>('datas');
+
+    List<GetDetailsAttributeModel> reponse = dataBox.values.map((e) {
+      return GetDetailsAttributeModel(
+          name: e.name,
+          id: e.id,
+          data: DataAttribute(
+              dataColor: e.data.dataColor,
+              dataCapacity: e.data.dataCapacity,
+              capacityGb: e.data.capacityGb,
+              dataPrice: e.data.dataPrice,
+              dataGeneration: e.data.dataGeneration,
+              year: e.data.year,
+              cpuModel: e.data.cpuModel,
+              hardDiskSize: e.data.hardDiskSize,
+              strapColour: e.data.strapColour,
+              caseSize: e.data.caseSize,
+              color: e.data.color,
+              description: e.data.description,
+              capacity: e.data.capacity,
+              screenSize: e.data.screenSize,
+              generation: e.data.generation,
+              price: e.data.price));
+    }).toList();
+    print(reponse);
+    emit(GetDataSuccessState(reponse));
   }
 }
