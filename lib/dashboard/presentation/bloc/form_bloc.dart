@@ -95,29 +95,30 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       // final responseModel = GetDetailsResponseModel.fromJson(response.right);
       // for hive local db
       print("object");
-      var dataMode = GetDetailsModel(
-          responseModel.id ?? "",
-          responseModel.name ?? "",
-          DataHive(
-              responseModel.data?.dataColor ?? "",
-              responseModel.data?.dataCapacity ?? "",
-              responseModel.data?.capacityGb ?? 0,
-              responseModel.data?.dataPrice ?? 0,
-              responseModel.data?.dataGeneration ?? "",
-              responseModel.data?.year ?? 0,
-              responseModel.data?.cpuModel ?? "",
-              responseModel.data?.hardDiskSize ?? "",
-              responseModel.data?.strapColour ?? "",
-              responseModel.data?.caseSize ?? "",
-              responseModel.data?.color ?? "",
-              responseModel.data?.description ?? "",
-              responseModel.data?.capacity ?? "",
-              responseModel.data?.screenSize ?? 0,
-              responseModel.data?.generation ?? "",
-              responseModel.data?.price ?? ""));
+
+      // var dataMode = GetDetailsModel(
+      //     responseModel.id ?? "",
+      //     responseModel.name ?? "",
+      //     DataHive(
+      //         responseModel.data?.dataColor ?? "",
+      //         responseModel.data?.dataCapacity ?? "",
+      //         responseModel.data?.capacityGb ?? 0,
+      //         responseModel.data?.dataPrice ?? 0,
+      //         responseModel.data?.dataGeneration ?? "",
+      //         responseModel.data?.year ?? 0,
+      //         responseModel.data?.cpuModel ?? "",
+      //         responseModel.data?.hardDiskSize ?? "",
+      //         responseModel.data?.strapColour ?? "",
+      //         responseModel.data?.caseSize ?? "",
+      //         responseModel.data?.color ?? "",
+      //         responseModel.data?.description ?? "",
+      //         responseModel.data?.capacity ?? "",
+      //         responseModel.data?.screenSize ?? 0,
+      //         responseModel.data?.generation ?? "",
+      //         responseModel.data?.price ?? ""));
       print("object");
       final dataBox = await Hive.openBox<GetDetailsModel>('datas');
-      dataBox.add(dataMode);
+      // dataBox.add(dataMode);
       // mapping data for local db
       List<GetDetailsResponseModel> res = dataBox.values.map((e) {
         return GetDetailsResponseModel(
@@ -145,26 +146,50 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         print("response data ${element.data?.toJson().toString()}");
       }
       // for passing to ui
-      getDetailsAttributeModel = GetDetailsAttributeModel(
-          id: responseModel.id ?? "",
-          name: responseModel.name ?? "",
+      List<GetDetailsAttributeModel> uiData = listOfModel.map((e) {
+        return GetDetailsAttributeModel(
+          name: e.name,
+          id: e.id,
           data: DataAttribute(
-              dataColor: responseModel.data?.dataColor ?? "",
-              dataCapacity: responseModel.data?.dataCapacity ?? "",
-              capacityGb: responseModel.data?.capacityGb ?? 0,
-              dataPrice: responseModel.data?.dataPrice ?? 0,
-              dataGeneration: responseModel.data?.dataGeneration ?? "",
-              year: responseModel.data?.year ?? 0,
-              cpuModel: responseModel.data?.cpuModel ?? "",
-              hardDiskSize: responseModel.data?.hardDiskSize ?? "",
-              strapColour: responseModel.data?.strapColour ?? "",
-              caseSize: responseModel.data?.caseSize ?? "",
-              color: responseModel.data?.color ?? "",
-              description: responseModel.data?.description ?? "",
-              capacity: responseModel.data?.capacity ?? "",
-              screenSize: responseModel.data?.screenSize ?? 0,
-              generation: responseModel.data?.generation ?? "",
-              price: responseModel.data?.price ?? ""));
+              dataColor: e.data?.dataColor ?? "",
+              dataCapacity: e.data?.dataCapacity ?? "",
+              capacityGb: e.data?.capacityGb ?? 0,
+              dataPrice: e.data?.dataPrice ?? 0,
+              dataGeneration: e.data?.dataGeneration ?? "",
+              year: e.data?.year ?? 0,
+              cpuModel: e.data?.cpuModel ?? "",
+              hardDiskSize: e.data?.hardDiskSize ?? "",
+              strapColour: e.data?.strapColour ?? "",
+              caseSize: e.data?.caseSize ?? "",
+              color: e.data?.color ?? "",
+              description: e.data?.description ?? "",
+              capacity: e.data?.capacity ?? "",
+              screenSize: e.data?.screenSize ?? 0,
+              generation: e.data?.generation ?? "",
+              price: e.data?.price ?? ""),
+        );
+      }).toList();
+      print("ui dtata ${uiData.toString()}");
+      // getDetailsAttributeModel = GetDetailsAttributeModel(
+      //     id: responseModel.id ?? "",
+      //     name: responseModel.name ?? "",
+      //     data: DataAttribute(
+      //         dataColor: responseModel.data?.dataColor ?? "",
+      //         dataCapacity: responseModel.data?.dataCapacity ?? "",
+      //         capacityGb: responseModel.data?.capacityGb ?? 0,
+      //         dataPrice: responseModel.data?.dataPrice ?? 0,
+      //         dataGeneration: responseModel.data?.dataGeneration ?? "",
+      //         year: responseModel.data?.year ?? 0,
+      //         cpuModel: responseModel.data?.cpuModel ?? "",
+      //         hardDiskSize: responseModel.data?.hardDiskSize ?? "",
+      //         strapColour: responseModel.data?.strapColour ?? "",
+      //         caseSize: responseModel.data?.caseSize ?? "",
+      //         color: responseModel.data?.color ?? "",
+      //         description: responseModel.data?.description ?? "",
+      //         capacity: responseModel.data?.capacity ?? "",
+      //         screenSize: responseModel.data?.screenSize ?? 0,
+      //         generation: responseModel.data?.generation ?? "",
+      //         price: responseModel.data?.price ?? ""));
 
       emit(GetDataSuccessState(getDetailsAttributeModel));
     }
