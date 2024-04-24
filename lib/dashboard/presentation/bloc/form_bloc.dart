@@ -94,7 +94,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           getDetailsResponseModelFromJson(jsonEncode(response.right));
       // final responseModel = GetDetailsResponseModel.fromJson(response.right);
       // for hive local db
-      print("object");
 
       // var dataMode = GetDetailsModel(
       //     responseModel.id ?? "",
@@ -116,7 +115,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       //         responseModel.data?.screenSize ?? 0,
       //         responseModel.data?.generation ?? "",
       //         responseModel.data?.price ?? ""));
-      print("object");
+
       final dataBox = await Hive.openBox<GetDetailsModel>('datas');
       // dataBox.add(dataMode);
       // mapping data for local db
@@ -142,9 +141,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 generation: e.data.generation,
                 price: e.data.price));
       }).toList();
-      for (var element in res) {
-        print("response data ${element.data?.toJson().toString()}");
-      }
+      for (var element in res) {}
       // for passing to ui
       List<GetDetailsAttributeModel> uiData = listOfModel.map((e) {
         return GetDetailsAttributeModel(
@@ -169,7 +166,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               price: e.data?.price ?? ""),
         );
       }).toList();
-      print("ui dtata ${uiData.toString()}");
+
       // getDetailsAttributeModel = GetDetailsAttributeModel(
       //     id: responseModel.id ?? "",
       //     name: responseModel.name ?? "",
