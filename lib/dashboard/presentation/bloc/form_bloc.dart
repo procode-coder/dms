@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dms/dashboard/data/model/get_details_hive_model.dart';
 import 'package:dms/dashboard/data/model/get_details_response_model.dart';
 import 'package:dms/dashboard/domain/entity/get_details_attribute_model.dart';
@@ -89,7 +90,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (response.isLeft) {
       emit(GetDataFailState());
     } else {
-      final responseModel = GetDetailsResponseModel.fromJson(response.right);
+      List<GetDetailsResponseModel> listOfModel =
+          getDetailsResponseModelFromJson(jsonEncode(response.right));
+      // final responseModel = GetDetailsResponseModel.fromJson(response.right);
       // for hive local db
       print("object");
       var dataMode = GetDetailsModel(
