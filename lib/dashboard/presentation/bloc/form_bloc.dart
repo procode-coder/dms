@@ -16,6 +16,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   DashboardBloc() : super(DashboardInitial()) {
     on<DashboardInitEvent>(dashboardInitEvent);
+    on<DashBoardBackEvent>(dashBoardBackEvent);
   }
 
   FutureOr<void> dashboardInitEvent(
@@ -108,6 +109,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
+        print("off net");
         List<GetDetailsAttributeModel> reponse = dataBox.values.map((e) {
           return GetDetailsAttributeModel(
               name: e.name,
@@ -130,10 +132,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                   generation: e.data.generation,
                   price: e.data.price));
         }).toList();
-        emit(GetDataSuccessState(reponse));
+        print(reponse);
+        emit(GetDataSuccessState(uiData));
       } else {
+        print("net on");
         emit(GetDataSuccessState(uiData));
       }
     }
+  }
+
+  FutureOr<void> dashBoardBackEvent(
+      DashBoardBackEvent event, Emitter<DashboardState> emit) {
+    emit(DashBoardBackstate());
   }
 }
