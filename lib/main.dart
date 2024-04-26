@@ -1,7 +1,7 @@
-import 'package:dms/dashboard/data/model/get_details_hive_model.dart';
-import 'package:dms/dashboard/presentation/bloc/form_bloc.dart';
-import 'package:dms/dashboard/presentation/view/form.dart';
-import 'package:dms/dashboard/presentation/view/forms.dart';
+import 'package:dms/modules/dashboard/data/model/get_details_hive_model.dart';
+import 'package:dms/modules/dashboard/presentation/bloc/form_bloc.dart';
+import 'package:dms/modules/dashboard/presentation/view/form.dart';
+import 'package:dms/modules/dashboard/presentation/view/forms.dart';
 import 'package:dms/services/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

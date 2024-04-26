@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:dms/dashboard/data/model/get_details_hive_model.dart';
-import 'package:dms/dashboard/data/model/get_details_response_model.dart';
-import 'package:dms/dashboard/domain/entity/get_details_attribute_model.dart';
-import 'package:dms/dashboard/domain/usecase/get_details_usecase.dart';
-import 'package:dms/dashboard/presentation/bloc/form_event.dart';
-import 'package:dms/dashboard/presentation/bloc/form_state.dart';
+import 'package:dms/modules/dashboard/data/model/get_details_hive_model.dart';
+import 'package:dms/modules/dashboard/data/model/get_details_response_model.dart';
+import 'package:dms/modules/dashboard/domain/entity/get_details_attribute_model.dart';
+import 'package:dms/modules/dashboard/domain/usecase/get_details_usecase.dart';
+import 'package:dms/modules/dashboard/presentation/bloc/form_event.dart';
+import 'package:dms/modules/dashboard/presentation/bloc/form_state.dart';
 import 'package:dms/services/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -150,31 +150,37 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> dashBoardHiveEvent(
       DashBoardHiveEvent event, Emitter<DashboardState> emit) async {
-    final dataBox = await Hive.openBox<GetDetailsModel>('datas');
+    var connectivityResult = await (Connectivity().checkConnectivity());
 
-    List<GetDetailsAttributeModel> reponse = dataBox.values.map((e) {
-      return GetDetailsAttributeModel(
-          name: e.name,
-          id: e.id,
-          data: DataAttribute(
-              dataColor: e.data.dataColor,
-              dataCapacity: e.data.dataCapacity,
-              capacityGb: e.data.capacityGb,
-              dataPrice: e.data.dataPrice,
-              dataGeneration: e.data.dataGeneration,
-              year: e.data.year,
-              cpuModel: e.data.cpuModel,
-              hardDiskSize: e.data.hardDiskSize,
-              strapColour: e.data.strapColour,
-              caseSize: e.data.caseSize,
-              color: e.data.color,
-              description: e.data.description,
-              capacity: e.data.capacity,
-              screenSize: e.data.screenSize,
-              generation: e.data.generation,
-              price: e.data.price));
-    }).toList();
-    print(reponse);
-    emit(GetDataSuccessState(reponse));
+    if (connectivityResult == ConnectivityResult.none) {
+      final dataBox = await Hive.openBox<GetDetailsModel>('datas');
+
+      List<GetDetailsAttributeModel> reponse = dataBox.values.map((e) {
+        return GetDetailsAttributeModel(
+            name: e.name,
+            id: e.id,
+            data: DataAttribute(
+                dataColor: e.data.dataColor,
+                dataCapacity: e.data.dataCapacity,
+                capacityGb: e.data.capacityGb,
+                dataPrice: e.data.dataPrice,
+                dataGeneration: e.data.dataGeneration,
+                year: e.data.year,
+                cpuModel: e.data.cpuModel,
+                hardDiskSize: e.data.hardDiskSize,
+                strapColour: e.data.strapColour,
+                caseSize: e.data.caseSize,
+                color: e.data.color,
+                description: e.data.description,
+                capacity: e.data.capacity,
+                screenSize: e.data.screenSize,
+                generation: e.data.generation,
+                price: e.data.price));
+      }).toList();
+
+      emit(GetDataSuccessState(reponse));
+    } else {
+      // Handle network connectivity is available scenario
+    }
   }
 }

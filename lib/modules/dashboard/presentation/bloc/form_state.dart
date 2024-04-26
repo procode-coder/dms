@@ -1,6 +1,6 @@
-import 'package:dms/dashboard/data/model/get_details_hive_model.dart';
-import 'package:dms/dashboard/data/model/get_details_response_model.dart';
-import 'package:dms/dashboard/domain/entity/get_details_attribute_model.dart';
+import 'package:dms/modules/dashboard/data/model/get_details_hive_model.dart';
+import 'package:dms/modules/dashboard/data/model/get_details_response_model.dart';
+import 'package:dms/modules/dashboard/domain/entity/get_details_attribute_model.dart';
 import 'package:hive/hive.dart';
 
 abstract class DashboardState {}

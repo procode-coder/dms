@@ -1,4 +1,4 @@
-import 'package:dms/dashboard/domain/repository/get_details_repository.dart';
+import 'package:dms/modules/dashboard/domain/repository/get_details_repository.dart';
 import 'package:dms/utils/error/failure.dart';
 import 'package:dms/utils/network/api_provider.dart';
 import 'package:either_dart/either.dart';
