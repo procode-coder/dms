@@ -9,61 +9,117 @@ ToDoModel toDoModelFromJson(String str) => ToDoModel.fromJson(json.decode(str));
 String toDoModelToJson(ToDoModel data) => json.encode(data.toJson());
 
 class ToDoModel {
-  List<Todo>? todos;
-  int? total;
-  int? skip;
-  int? limit;
+  int? code;
+  bool? success;
+  int? timestamp;
+  String? message;
+  List<Item>? items;
+  Meta? meta;
 
   ToDoModel({
-    this.todos,
-    this.total,
-    this.skip,
-    this.limit,
+    this.code,
+    this.success,
+    this.timestamp,
+    this.message,
+    this.items,
+    this.meta,
   });
 
   factory ToDoModel.fromJson(Map<String, dynamic> json) => ToDoModel(
-        todos: json["todos"] == null
+        code: json["code"],
+        success: json["success"],
+        timestamp: json["timestamp"],
+        message: json["message"],
+        items: json["items"] == null
             ? []
-            : List<Todo>.from(json["todos"]!.map((x) => Todo.fromJson(x))),
-        total: json["total"],
-        skip: json["skip"],
-        limit: json["limit"],
+            : List<Item>.from(json["items"]!.map((x) => Item.fromJson(x))),
+        meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "todos": todos == null
+        "code": code,
+        "success": success,
+        "timestamp": timestamp,
+        "message": message,
+        "items": items == null
             ? []
-            : List<dynamic>.from(todos!.map((x) => x.toJson())),
-        "total": total,
-        "skip": skip,
-        "limit": limit,
+            : List<dynamic>.from(items!.map((x) => x.toJson())),
+        "meta": meta?.toJson(),
       };
 }
 
-class Todo {
-  int? id;
-  String? todo;
-  bool? completed;
-  int? userId;
+class Item {
+  String? id;
+  String? title;
+  String? description;
+  bool? isCompleted;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
-  Todo({
+  Item({
     this.id,
-    this.todo,
-    this.completed,
-    this.userId,
+    this.title,
+    this.description,
+    this.isCompleted,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  factory Todo.fromJson(Map<String, dynamic> json) => Todo(
-        id: json["id"],
-        todo: json["todo"],
-        completed: json["completed"],
-        userId: json["userId"],
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
+        id: json["_id"],
+        title: json["title"],
+        description: json["description"],
+        isCompleted: json["is_completed"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "todo": todo,
-        "completed": completed,
-        "userId": userId,
+        "_id": id,
+        "title": title,
+        "description": description,
+        "is_completed": isCompleted,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+      };
+}
+
+class Meta {
+  int? totalItems;
+  int? totalPages;
+  int? perPageItem;
+  int? currentPage;
+  int? pageSize;
+  bool? hasMorePage;
+
+  Meta({
+    this.totalItems,
+    this.totalPages,
+    this.perPageItem,
+    this.currentPage,
+    this.pageSize,
+    this.hasMorePage,
+  });
+
+  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+        totalItems: json["total_items"],
+        totalPages: json["total_pages"],
+        perPageItem: json["per_page_item"],
+        currentPage: json["current_page"],
+        pageSize: json["page_size"],
+        hasMorePage: json["has_more_page"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "total_items": totalItems,
+        "total_pages": totalPages,
+        "per_page_item": perPageItem,
+        "current_page": currentPage,
+        "page_size": pageSize,
+        "has_more_page": hasMorePage,
       };
 }

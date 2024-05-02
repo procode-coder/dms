@@ -1,20 +1,21 @@
+import 'package:dms/modules/todo_app/data/model/todo_request_model.dart';
 import 'package:dms/modules/todo_app/domain/repository/todo_repository.dart';
 import 'package:dms/utils/error/failure.dart';
 import 'package:dms/utils/network/api_provider.dart';
 import 'package:either_dart/either.dart';
 
-class ToDORepoImpl implements ToDoRepo {
+class ToDOPostRepoImpl implements ToDoAddRepo {
   final _apiProvider = ApiProvider();
 
   @override
-  Future<Either<Failure, dynamic>> getToDoData() async {
+  Future<Either<Failure, dynamic>> postToDoData(ItemRequestModel body) async {
     dynamic response;
-
+    print(body.toJson());
     try {
-      response = await _apiProvider.getData(
-        baseUrl: "https://api.nstack.in/v1",
-        subUrl: "/todos?page=1&limit=10",
-      );
+      response = await _apiProvider.postData(
+          baseUrl: "https://api.nstack.in/v1",
+          subUrl: "/todos",
+          body: body.toJson());
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }

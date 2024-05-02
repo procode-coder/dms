@@ -10,3 +10,10 @@ class ToDOUsecase implements UseCaseNoInput {
     return await serviceLocator.get<ToDoRepo>().getToDoData();
   }
 }
+
+class ToDOAddUsecase implements UseCaseOneInput {
+  @override
+  Future<Either<Failure, dynamic>> invoke(body) async {
+    return await serviceLocator.get<ToDoAddRepo>().postToDoData(body);
+  }
+}
