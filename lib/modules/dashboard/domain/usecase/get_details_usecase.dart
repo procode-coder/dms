@@ -1,4 +1,4 @@
-import 'package:dms/dashboard/domain/repository/get_details_repository.dart';
+import 'package:dms/modules/dashboard/domain/repository/get_details_repository.dart';
 import 'package:dms/services/locator.dart';
 import 'package:dms/utils/error/failure.dart';
 import 'package:dms/utils/usecase/use_case.dart';
