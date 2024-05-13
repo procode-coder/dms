@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CenteredButtonPage extends StatelessWidget {
-  const CenteredButtonPage({super.key});
+  CenteredButtonPage({super.key});
 
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey,
         title: const Text('ToDo App'),
       ),
       body: MultiBlocProvider(
@@ -22,9 +25,7 @@ class CenteredButtonPage extends StatelessWidget {
         ],
         child: BlocConsumer<ToDoBloc, ToDoState>(
           listener: (context, state) {
-            print(state);
             if (state is ToDoPostSuccessState) {
-              print("hii");
               BlocProvider.of<ToDoBloc>(context).add(ToDoInitialEvent());
             }
           },
@@ -34,7 +35,7 @@ class CenteredButtonPage extends StatelessWidget {
                 if (state is ToDoSuccessState)
                   SizedBox(
                       height: 400,
-                      width: 400,
+                      width: 500,
                       child: SingleChildScrollView(
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -44,50 +45,93 @@ class CenteredButtonPage extends StatelessWidget {
                                 state.toDoAttributeModel.items?[index].title;
                             var description = state
                                 .toDoAttributeModel.items?[index].description;
-
-                            // print(data?.color ?? "hey");
+                            print(title);
+                            print(description);
                             return ListTile(
+                                tileColor: Colors.grey.shade200,
                                 title: RichText(
-                              text: TextSpan(children: [
-                                TextSpan(text: "Title : $title \n"),
-                                TextSpan(text: "Description : $description \n"),
-                              ]),
-                            ));
+                                  text: TextSpan(children: [
+                                    TextSpan(
+                                        text: "Title : $title \n",
+                                        style: const TextStyle(fontSize: 16)),
+                                    TextSpan(
+                                        text: "Description : $description \n",
+                                        style: const TextStyle(fontSize: 16)),
+                                  ]),
+                                ));
                           },
                         ),
-                      )),
+                      ))
+                else
+                  const SizedBox(
+                    height: 400,
+                    width: 500,
+                  ),
                 SizedBox(
                   height: 200,
                   width: 200,
-                  child: ListView(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(hintText: "enter Title"),
-                        controller:
-                            BlocProvider.of<ToDoBloc>(context).titleController,
-                      ),
-                      TextField(
-                          decoration:
-                              InputDecoration(hintText: "enter Description"),
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      children: [
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: "enter Title",
+                          ),
                           controller: BlocProvider.of<ToDoBloc>(context)
-                              .descriptionController),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
+                              .titleController,
+                          onSaved: (value) {
                             BlocProvider.of<ToDoBloc>(context)
-                                .add(ToDoPostInitialEvent());
+                                    .titleController
+                                    .text ==
+                                value;
                           },
-                          child: const Text("Submit"))
-                    ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value == "") {
+                              return 'Please enter a title'; // Validation error message
+                            }
+                            return value; // Return null if the input is valid
+                          },
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: "enter Description",
+                          ),
+                          controller: BlocProvider.of<ToDoBloc>(context)
+                              .descriptionController,
+                          onSaved: (value) {
+                            BlocProvider.of<ToDoBloc>(context)
+                                    .descriptionController
+                                    .text ==
+                                value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value == "") {
+                              return 'Please enter a description'; // Validation error message
+                            }
+                            return null; // Return null if the input is valid
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              BlocProvider.of<ToDoBloc>(context)
+                                  .add(ToDoPostInitialEvent());
+                              // BlocProvider.of<ToDoBloc>(context).add(ToDOHiveInitialEvent());
+                            }
+                          },
+                          child: const Text("Submit"),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
             );
-            // if (state is ToDoSuccessState) {
-            //   return
-            // }
           },
         ),
       ),

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dms/modules/todo_app/data/model/todo_hive_model.dart';
 import 'package:dms/modules/todo_app/data/model/todo_model.dart';
 import 'package:dms/modules/todo_app/data/model/todo_request_model.dart';
 import 'package:dms/modules/todo_app/domain/entity/todo_entity_model.dart';
@@ -9,6 +11,7 @@ import 'package:dms/modules/todo_app/presentation/bloc/todo_state.dart';
 import 'package:dms/services/locator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
 class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
   final TextEditingController titleController = TextEditingController();
@@ -17,6 +20,7 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
     on<ToDoEvent>((event, emit) {});
     on<ToDoInitialEvent>(todoInitialEvent);
     on<ToDoPostInitialEvent>(todoPostInitialEvent);
+    // on<ToDOHiveInitialEvent>(toDoHiveEvent);
   }
 
   FutureOr<void> todoInitialEvent(
@@ -25,7 +29,31 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
     final response = await repository.invoke();
     // final List<ConnectivityResult> connectivityResult =
     //     await (Connectivity().checkConnectivity());
+    // final dataBox = await Hive.openBox<ToDoHiveModel>('values');
+    // ToDoModel res = ToDoModel(
+    //     code: dataBox.values.first.code ?? 0,
+    //     success: dataBox.values.first.success ?? false,
+    //     timestamp: dataBox.values.first.timestamp ?? 0,
+    //     message: dataBox.values.first.message ?? "",
+    //     items: dataBox.values.first.items
+    //         ?.map((e) => Item(
+    //               createdAt: e.createdAt ?? DateTime.now(),
+    //               description: e.description ?? "",
+    //               id: e.id ?? "",
+    //               isCompleted: e.isCompleted ?? false,
+    //               title: e.title ?? "",
+    //               updatedAt: e.updatedAt ?? DateTime.now(),
+    //             ))
+    //         .toList(),
+    //     meta: Meta(
+    //         currentPage: dataBox.values.first.meta?.currentPage ?? 0,
+    //         hasMorePage: dataBox.values.first.meta?.hasMorePage ?? false,
+    //         pageSize: dataBox.values.first.meta?.pageSize ?? 0,
+    //         perPageItem: dataBox.values.first.meta?.perPageItem ?? 0,
+    //         totalItems: dataBox.values.first.meta?.totalItems ?? 0,
+    //         totalPages: dataBox.values.first.meta?.totalPages ?? 0));
 
+    // print(res);
     if (response.isLeft) {
       emit(TODOFailState());
     } else {
@@ -38,11 +66,11 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
             timestamp: toDoModel.timestamp ?? 0,
             items: toDoModel.items
                 ?.map((e) => TodoAttributeItems(
-                    description: e.description ?? "",
+                    description: e.description ?? "Saurabh",
                     createdAt: e.createdAt ?? DateTime.now(),
-                    id: e.id ?? "",
+                    id: e.id ?? "663c9c778e47deee7ac1c61d",
                     isCompleted: e.isCompleted ?? false,
-                    title: e.title ?? "",
+                    title: e.title ?? "helloy",
                     updatedAt: e.updatedAt ?? DateTime.now()))
                 .toList(),
             meta: ToDoMetaItems(
@@ -52,7 +80,7 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
                 perPageItem: toDoModel.meta?.perPageItem ?? 0,
                 totalItems: toDoModel.meta?.totalItems ?? 0,
                 totalPages: toDoModel.meta?.totalPages ?? 0));
-
+        emit(ToDoTestState());
         emit(ToDoSuccessState(toDoAttributeModel));
       } catch (e) {
         emit(TODOFailState());
@@ -73,13 +101,51 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
       emit(TODOPostFailState());
     } else {
       try {
-        print(response);
-        emit(ToDoPostSuccessState());
-        descriptionController.clear();
-        titleController.clear();
+        if (response.right == []) {
+          emit(TODoEmptystate());
+        } else {
+          emit(ToDoPostSuccessState());
+          descriptionController.clear();
+          titleController.clear();
+        }
       } catch (e) {
         emit(TODOPostFailState());
       }
     }
   }
+
+  // FutureOr<void> toDoHiveEvent(
+  //     ToDOHiveInitialEvent event, Emitter<ToDoState> emit) async {
+  //   var connectivityResult = await (Connectivity().checkConnectivity());
+
+  //   // if (connectivityResult == ConnectivityResult.none) {
+  //   final dataBox = await Hive.openBox<ToDoHiveModel>('values');
+  //   ToDoAttributeModel res = ToDoAttributeModel(
+  //       code: dataBox.values.first.code ?? 0,
+  //       success: dataBox.values.first.success ?? false,
+  //       timestamp: dataBox.values.first.timestamp ?? 0,
+  //       message: dataBox.values.first.message ?? "",
+  //       items: dataBox.values.first.items
+  //           ?.map((e) => TodoAttributeItems(
+  //                 createdAt: e.createdAt ?? DateTime.now(),
+  //                 description: e.description ?? "",
+  //                 id: e.id ?? "",
+  //                 isCompleted: e.isCompleted ?? false,
+  //                 title: e.title ?? "",
+  //                 updatedAt: e.updatedAt ?? DateTime.now(),
+  //               ))
+  //           .toList(),
+  //       meta: ToDoMetaItems(
+  //           currentPage: dataBox.values.first.meta?.currentPage ?? 0,
+  //           hasMorePage: dataBox.values.first.meta?.hasMorePage ?? false,
+  //           pageSize: dataBox.values.first.meta?.pageSize ?? 0,
+  //           perPageItem: dataBox.values.first.meta?.perPageItem ?? 0,
+  //           totalItems: dataBox.values.first.meta?.totalItems ?? 0,
+  //           totalPages: dataBox.values.first.meta?.totalPages ?? 0));
+
+  //   emit(ToDoHiveSuccessState(res));
+  //   // } else {
+  //   //   emit(TODOHiveFailState());
+  //   // }
+  // }
 }

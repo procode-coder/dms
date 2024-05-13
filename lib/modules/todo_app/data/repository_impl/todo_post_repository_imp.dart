@@ -10,7 +10,7 @@ class ToDOPostRepoImpl implements ToDoAddRepo {
   @override
   Future<Either<Failure, dynamic>> postToDoData(ItemRequestModel body) async {
     dynamic response;
-    print(body.toJson());
+
     try {
       response = await _apiProvider.postData(
           baseUrl: "https://api.nstack.in/v1",

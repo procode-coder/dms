@@ -5,3 +5,5 @@ abstract class ToDoEvent {}
 class ToDoInitialEvent extends ToDoEvent {}
 
 class ToDoPostInitialEvent extends ToDoEvent {}
+
+class ToDOHiveInitialEvent extends ToDoEvent {}

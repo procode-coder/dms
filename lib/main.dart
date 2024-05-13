@@ -1,7 +1,7 @@
 import 'package:dms/modules/dashboard/data/model/get_details_hive_model.dart';
 import 'package:dms/modules/dashboard/presentation/bloc/form_bloc.dart';
-import 'package:dms/modules/dashboard/presentation/view/form.dart';
-import 'package:dms/modules/dashboard/presentation/view/forms.dart';
+
+import 'package:dms/modules/todo_app/data/model/todo_hive_model.dart';
 import 'package:dms/modules/todo_app/presentation/view/todo_page.dart';
 import 'package:dms/services/locator.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +10,13 @@ import 'package:hive_flutter/adapters.dart';
 
 void main() async {
   await Hive.initFlutter();
-  Hive.registerAdapter(GetDetailsModelAdapter());
-  Hive.registerAdapter(DataHiveAdapter());
-  await Hive.openBox<GetDetailsModel>('datas');
+  // Hive.registerAdapter(GetDetailsModelAdapter());
+  // Hive.registerAdapter(DataHiveAdapter());
+  Hive.registerAdapter(ToDoHiveModelAdapter());
+  Hive.registerAdapter(HiveItemAdapter());
+  Hive.registerAdapter(HiveMetaAdapter());
+  // await Hive.openBox<GetDetailsModel>('datas');
+  await Hive.openBox<ToDoHiveModel>('datas');
   initializeDependencies();
   runApp(const MyApp());
 }
@@ -27,7 +31,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BlocProvider(
         create: (context) => DashboardBloc(),
-        child: const CenteredButtonPage(),
+        child: CenteredButtonPage(),
       ),
     );
   }
