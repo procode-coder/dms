@@ -4,17 +4,18 @@ import 'package:dms/utils/error/failure.dart';
 import 'package:dms/utils/network/api_provider.dart';
 import 'package:either_dart/either.dart';
 
-class ToDOPostRepoImpl implements ToDoAddRepo {
+class ToDOEditRepoImpl implements ToDoEditRepo {
   final _apiProvider = ApiProvider();
 
   @override
-  Future<Either<Failure, dynamic>> postToDoData(ItemRequestModel body) async {
+  Future<Either<Failure, dynamic>> editToDoData(
+      ItemRequestModel body, String uid) async {
     dynamic response;
 
     try {
-      response = await _apiProvider.postData(
+      response = await _apiProvider.putData(
           baseUrl: "https://api.nstack.in/v1",
-          subUrl: "/todos",
+          subUrl: "/todos/$uid",
           body: body.toJson());
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

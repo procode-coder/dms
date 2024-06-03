@@ -4,18 +4,18 @@ import 'package:dms/utils/error/failure.dart';
 import 'package:dms/utils/network/api_provider.dart';
 import 'package:either_dart/either.dart';
 
-class ToDOPostRepoImpl implements ToDoAddRepo {
+class ToDODeleteRepoImpl implements ToDoDeleteRepo {
   final _apiProvider = ApiProvider();
 
   @override
-  Future<Either<Failure, dynamic>> postToDoData(ItemRequestModel body) async {
+  Future<Either<Failure, dynamic>> deleteToDoData(String uid) async {
     dynamic response;
 
     try {
-      response = await _apiProvider.postData(
-          baseUrl: "https://api.nstack.in/v1",
-          subUrl: "/todos",
-          body: body.toJson());
+      response = await _apiProvider.deleteData(
+          baseUrl: "https://api.nstack.in/v1", subUrl: "/todos/$uid"
+          // body: {"id": uid}
+          );
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
