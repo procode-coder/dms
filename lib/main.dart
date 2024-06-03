@@ -1,11 +1,9 @@
-import 'package:dms/modules/dashboard/data/model/get_details_hive_model.dart';
-import 'package:dms/modules/dashboard/presentation/bloc/form_bloc.dart';
-
+import 'package:dms/modules/practice/riverpod.dart';
 import 'package:dms/modules/todo_app/data/model/todo_hive_model.dart';
 import 'package:dms/modules/todo_app/presentation/view/todo_page.dart';
 import 'package:dms/services/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
 void main() async {
@@ -27,11 +25,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BlocProvider(
-        create: (context) => DashboardBloc(),
-        child: CenteredButtonPage(),
+      home: ProviderScope(
+        // create: (context) => DashboardBloc(),
+        child: TodoPage(),
       ),
     );
   }

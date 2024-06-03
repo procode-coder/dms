@@ -10,6 +10,8 @@ class TODoEmptystate extends ToDoState {}
 
 class TODOFailState extends ToDoState {}
 
+class TODOLoadState extends ToDoState {}
+
 class ToDoSuccessState extends ToDoState {
   ToDoAttributeModel toDoAttributeModel;
   ToDoSuccessState(this.toDoAttributeModel);
@@ -29,3 +31,17 @@ class ToDoHiveSuccessState extends ToDoState {
 }
 
 class TODOHiveFailState extends ToDoState {}
+
+class TODODeleteFailState extends ToDoState {}
+
+class TODoDeleteInitial extends ToDoState {}
+
+class ToDoDeleteSuccessState extends ToDoState {}
+
+class TODOEditFailState extends ToDoState {}
+
+class TODoEditInitial extends ToDoState {}
+
+class ToDoEditSuccessState extends ToDoState {}
+
+class ToDoSearchSuccessState extends ToDoState {}

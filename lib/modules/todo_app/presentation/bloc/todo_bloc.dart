@@ -11,15 +11,52 @@ import 'package:dms/modules/todo_app/presentation/bloc/todo_state.dart';
 import 'package:dms/services/locator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 
 class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
+  List<TodoAttributeItems> searchedTaskSlots = [];
+  String message = "";
+  late ToDoAttributeModel toDoAttributeModel;
+
   ToDoBloc() : super(TODoInitial()) {
     on<ToDoEvent>((event, emit) {});
     on<ToDoInitialEvent>(todoInitialEvent);
     on<ToDoPostInitialEvent>(todoPostInitialEvent);
+    on<ToDoDeleteInitialEvent>(todoDeleteInitialEvent);
+    on<ToDoEditInitialEvent>(toDoEditInitialEvent);
+    on<SearchTasksEvent>(
+      (event, emit) {
+        if (searchTextController.text.isEmpty) {
+          searchedTaskSlots = [];
+
+          add(ToDoInitialEvent());
+        } else {
+          searchedTaskSlots = [];
+          bool isMatchFound = false;
+
+          toDoAttributeModel.items?.forEach((e) {
+            if (e.title.toLowerCase().contains(
+                      searchTextController.text.toLowerCase(),
+                    ) ==
+                true) {
+              searchedTaskSlots.add(e);
+
+              isMatchFound = true;
+
+              emit(ToDoSuccessState(toDoAttributeModel));
+            }
+          });
+
+          if (!isMatchFound) {
+            message = "No data found";
+            emit(TODoEmptystate());
+          }
+        }
+      },
+    );
+
     // on<ToDOHiveInitialEvent>(toDoHiveEvent);
   }
 
@@ -27,6 +64,8 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
       ToDoInitialEvent event, Emitter<ToDoState> emit) async {
     final repository = serviceLocator<ToDOUsecase>();
     final response = await repository.invoke();
+    // emit(TODOLoadState());
+
     // final List<ConnectivityResult> connectivityResult =
     //     await (Connectivity().checkConnectivity());
     // final dataBox = await Hive.openBox<ToDoHiveModel>('values');
@@ -59,7 +98,7 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
     } else {
       try {
         final toDoModel = toDoModelFromJson(jsonEncode(response.right));
-        final toDoAttributeModel = ToDoAttributeModel(
+        toDoAttributeModel = ToDoAttributeModel(
             code: toDoModel.code ?? 0,
             success: toDoModel.success ?? false,
             message: toDoModel.message ?? "",
@@ -80,7 +119,7 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
                 perPageItem: toDoModel.meta?.perPageItem ?? 0,
                 totalItems: toDoModel.meta?.totalItems ?? 0,
                 totalPages: toDoModel.meta?.totalPages ?? 0));
-        emit(ToDoTestState());
+        // emit(ToDoTestState());
         emit(ToDoSuccessState(toDoAttributeModel));
       } catch (e) {
         emit(TODOFailState());
@@ -104,9 +143,9 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
         if (response.right == []) {
           emit(TODoEmptystate());
         } else {
-          emit(ToDoPostSuccessState());
           descriptionController.clear();
           titleController.clear();
+          emit(ToDoPostSuccessState());
         }
       } catch (e) {
         emit(TODOPostFailState());
@@ -148,4 +187,55 @@ class ToDoBloc extends Bloc<ToDoEvent, ToDoState> {
   //   //   emit(TODOHiveFailState());
   //   // }
   // }
+
+  FutureOr<void> todoDeleteInitialEvent(
+      ToDoDeleteInitialEvent event, Emitter<ToDoState> emit) async {
+    emit(TODoDeleteInitial());
+    final repository = serviceLocator<ToDODeleteUsecase>();
+    final response = await repository.invoke(event.uid ?? "");
+
+    if (response.isLeft) {
+      emit(TODODeleteFailState());
+    } else {
+      try {
+        if (response.right == []) {
+          emit(TODoEmptystate());
+        } else {
+          descriptionController.clear();
+          titleController.clear();
+          emit(ToDoDeleteSuccessState());
+        }
+      } catch (e) {
+        emit(TODODeleteFailState());
+      }
+    }
+  }
+
+  FutureOr<void> toDoEditInitialEvent(
+      ToDoEditInitialEvent event, Emitter<ToDoState> emit) async {
+    emit(TODoEditInitial());
+    final repository = serviceLocator<ToDOEditUsecase>();
+    final response = await repository.invoke(
+        event.uid ?? "",
+        ItemRequestModel(
+          description: descriptionController.text,
+          title: titleController.text,
+        ));
+    print(response);
+    if (response.isLeft) {
+      emit(TODOEditFailState());
+    } else {
+      try {
+        if (response.right == []) {
+          emit(TODoEmptystate());
+        } else {
+          descriptionController.clear();
+          titleController.clear();
+          emit(ToDoEditSuccessState());
+        }
+      } catch (e) {
+        emit(TODOEditFailState());
+      }
+    }
+  }
 }

@@ -17,3 +17,17 @@ class ToDOAddUsecase implements UseCaseOneInput {
     return await serviceLocator.get<ToDoAddRepo>().postToDoData(body);
   }
 }
+
+class ToDODeleteUsecase implements UseCaseOneInput {
+  @override
+  Future<Either<Failure, dynamic>> invoke(uid) async {
+    return await serviceLocator.get<ToDoDeleteRepo>().deleteToDoData(uid);
+  }
+}
+
+class ToDOEditUsecase implements UseCaseTwoInput {
+  @override
+  Future<Either<Failure, dynamic>> invoke(uid, body) async {
+    return await serviceLocator.get<ToDoEditRepo>().editToDoData(body, uid);
+  }
+}

@@ -9,3 +9,12 @@ abstract class ToDoRepo {
 abstract class ToDoAddRepo {
   Future<Either<Failure, dynamic>> postToDoData(ItemRequestModel body);
 }
+
+abstract class ToDoDeleteRepo {
+  Future<Either<Failure, dynamic>> deleteToDoData(String uid);
+}
+
+abstract class ToDoEditRepo {
+  Future<Either<Failure, dynamic>> editToDoData(
+      ItemRequestModel body, String uid);
+}
